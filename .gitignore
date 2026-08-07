@@ -1,0 +1,9 @@
+.vscode
+coverage.*
+coverage-percent.txt
+.research_files
+.main
+CLAUDE.md
+git-update.sh
+.telemetry/
+.gitleaks-export/

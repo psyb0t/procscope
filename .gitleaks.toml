@@ -1,0 +1,14 @@
+title = "procscope secret scanning"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = """
+Vendored third-party source is not ours to rewrite, and .telemetry is local
+scratch that is never committed.
+"""
+paths = [
+  '''(^|/)vendor(?:/|$)''',
+  '''(^|/)\.telemetry(?:/|$)''',
+]
