@@ -2,6 +2,53 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v0.2.0 — 2026-08-08
+
+`logsearch` is gone. It wrapped a type that already did the job.
+
+### Removed
+
+- **`logsearch`.** It existed to search a process's in-memory log ring, but
+  `logring.Handler` in [slog-configurator](https://github.com/psyb0t/slog-configurator)
+  already **is** the `slog.Handler` and already exposes `Search`, `Count`,
+  `Tail`, `Clear` and `Stats`. There was nothing left to wrap:
+
+  ```go
+  ring := logring.New(logring.Options{})
+  slogconfigurator.AddHandler(ring)   // the ring IS the handler
+
+  entries := ring.Search(logring.SearchOptions{Contains: "timeout"})
+  ```
+
+  What the package added on top — a page-size clamp, per-line truncation, a
+  match count computed before paging — belongs on the ring itself, where every
+  consumer benefits, rather than behind a wrapper only this library's users
+  could reach. Its filter type was already a straight alias of the ring's, so
+  nothing about the query surface is lost.
+
+  **If you used it:** replace `logsearch.New(logsearch.Config{...})` with
+  `logring.New(logring.Options{...})`, pass the ring straight to `AddHandler`,
+  and call `Search` on it. The filter fields are identical. The extras —
+  clamping, truncation, total-before-paging — are not yet upstream; clamp and
+  truncate at your call site until they are.
+
+- **The `slog-configurator` dependency**, which existed only for `logsearch`.
+  procscope's dependencies are now `common-go` and `ctxerrors`.
+
+### Added
+
+- **`pprofcapture/README.md`** — a full walkthrough rather than a fragment:
+  complete runnable programs, an HTTP handler that serves profiles, what to
+  actually type to open one in `go tool pprof`, every profile kind and what it
+  answers, every field on `Result`, and recipes for the four questions people
+  reach for this with.
+
+### Changed
+
+- The root README's log-search example was missing its import block entirely,
+  so it could not be copied and run. It is replaced by a working example that
+  points at `logring` directly.
+
 ## v0.1.0 — 2026-08-07
 
 First release. A Go process can profile itself and search its own logs, and get

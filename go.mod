@@ -5,7 +5,6 @@ go 1.26
 require (
 	github.com/psyb0t/common-go v0.3.3
 	github.com/psyb0t/ctxerrors v0.4.3
-	github.com/psyb0t/slog-configurator v1.3.0
 	github.com/stretchr/testify v1.11.1
 )
 
