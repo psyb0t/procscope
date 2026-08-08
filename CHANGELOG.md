@@ -2,6 +2,21 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v0.2.1 — 2026-08-08
+
+Repo plumbing only. No library code changed.
+
+- The repo is now **mirrored to GitLab and Codeberg** on every push, and
+  **archived to the Wayback Machine, Software Heritage and archive.org**. The
+  archive runs only for the default branch, tags, the monthly cron and manual
+  dispatch, since Save Page Now is rate-limited.
+- Issues opened on either mirror are **pulled back into the GitHub tracker**
+  on a six-hourly schedule. The scheduled run jitters so both mirrors are not
+  hit by every repo at once; a manual dispatch runs immediately.
+- Pull requests from non-collaborators are **closed and locked** with a
+  pointer to the issue tracker.
+- `pre-commit.sh` runs `make lint && make test-coverage`.
+
 ## v0.2.0 — 2026-08-08
 
 `logsearch` is gone. It wrapped a type that already did the job.

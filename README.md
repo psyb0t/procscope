@@ -86,14 +86,16 @@ procscope does not do this, and deliberately so — [slog-configurator](https://
 ring := logring.New(logring.Options{})
 slogconfigurator.AddHandler(ring)   // the ring IS the slog.Handler
 
-entries := ring.Search(logring.SearchOptions{
+page := ring.Search(logring.SearchOptions{
     Attrs:    map[string]string{"request_id": "abc123"},
     MinLevel: slog.LevelWarn,
     Limit:    50,
 })
+
+fmt.Printf("showing %d of %d\n", len(page.Entries), page.Total)
 ```
 
-`Search`, `Count`, `Tail`, `Clear` and `Stats` are all methods on that handler, so there is nothing for procscope to wrap. `Attrs` matches structured attributes captured off the record, which is why it behaves the same in text or JSON mode and finds attributes bound upstream through `With` that never appear on the record itself.
+`Search`, `Count`, `Tail`, `Clear` and `Stats` are all methods on that handler, so there is nothing for procscope to wrap. `Search` hands back the total alongside the page, counted in the same locked walk, so paging is deliberate rather than guesswork. `Attrs` matches structured attributes captured off the record, which is why it behaves the same in text or JSON mode and finds attributes bound upstream through `With` that never appear on the record itself.
 
 A `logsearch` package shipped in v0.1.0 wrapping exactly that. It was removed in v0.2.0 — see [CHANGELOG.md](CHANGELOG.md).
 
