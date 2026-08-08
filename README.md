@@ -24,7 +24,7 @@ Go library that lets a process profile itself — what it's burning CPU on, what
 - [Every Field](#every-field)
 - [Errors](#errors)
 - [Recipes](#recipes)
-- [Searching The Process's Own Logs](#searching-the-processs-own-logs)
+- [Searching The Process's Own Logs — Not This Library](#searching-the-processs-own-logs--not-this-library)
 - [What This Costs At Rest](#what-this-costs-at-rest)
 - [Dev Workflow](#dev-workflow)
 - [Contributing](#contributing)
@@ -302,13 +302,18 @@ result, _ := procscope.Capture(procscope.Options{
 })
 ```
 
-## Searching The Process's Own Logs
+## Searching The Process's Own Logs — Not This Library
 
-procscope does not do this, and deliberately so — [slog-configurator](https://github.com/psyb0t/slog-configurator) already does, on the ring handler itself:
+procscope does not do this, and deliberately so — [slogging](https://github.com/psyb0t/slogging) already does, on the ring handler itself:
 
 ```go
+import (
+	"github.com/psyb0t/slogging/handlers/logring"
+	"github.com/psyb0t/slogging/slogconf"
+)
+
 ring := logring.New(logring.Options{})
-slogconfigurator.AddHandler(ring)   // the ring IS the slog.Handler
+slogconf.AddSink(ring)   // the ring IS the slog.Handler
 
 page := ring.Search(logring.SearchOptions{
     Attrs:    map[string]string{"request_id": "abc123"},

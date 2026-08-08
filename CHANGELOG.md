@@ -2,6 +2,25 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v0.3.2 — 2026-08-08
+
+Documentation. No library code changed.
+
+- **Fixed a broken cross-reference.** The log-searching section pointed at
+  `slog-configurator` and called `slogconfigurator.AddHandler(ring)`. That module
+  was renamed to [`slogging`](https://github.com/psyb0t/slogging) at its v1.5.0,
+  and `AddHandler` does not exist in it — the function for stacking an extra
+  handler is `slogconf.AddSink`. Anyone copying that snippet got a dead import
+  and a missing function.
+- The example now shows the real import paths
+  (`slogging/handlers/logring` and `slogging/slogconf`). The `SearchOptions`
+  fields and `Page` fields it uses were verified against the current source and
+  were already correct.
+- Renamed the section to **"Searching The Process's Own Logs — Not This
+  Library"**. The body always said procscope deliberately does not do this, but
+  the heading read like a feature list entry, which is also how it ended up
+  implied in the repository description.
+
 ## v0.3.1 — 2026-08-08
 
 Repository infrastructure only. No library code changed.
