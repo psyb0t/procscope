@@ -2,6 +2,61 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v0.3.0 — 2026-08-08
+
+Typed options instead of a magic integer, and the package moves to the repo
+root.
+
+### Changed
+
+- **`pprofcapture` is now the root package.** `pprofcapture.Capture(...)`
+  becomes `procscope.Capture(...)` — one import path, no stutter.
+
+- **`Capture(kind string, debug int, seconds int)` is now
+  `Capture(Options)`,** and every axis is a named type:
+
+  ```go
+  result, err := procscope.Capture(procscope.Options{
+      Kind:   procscope.KindGoroutine,
+      Format: procscope.FormatText,
+      Detail: procscope.DetailGrouped,
+      Window: 10 * time.Second,
+  })
+  ```
+
+  The zero `Options{}` is a heap profile in protobuf form — the common case —
+  so the simplest call is `Capture(Options{})`.
+
+- **`debug int` is gone, split into `Format` and `Detail`.** It was two
+  unrelated decisions in one number, inherited from
+  `runtime/pprof.Profile.WriteTo`: `0` meant protobuf, and anything higher
+  meant text AND picked a verbosity. Now `Format` chooses `FormatProto` or
+  `FormatText`, and `Detail` chooses `DetailGrouped` (identical stacks
+  collapsed with a count — what finds a goroutine leak) or `DetailFull`. The
+  pprof debug integer is no longer part of the API at all.
+
+  `Detail` applies only to `FormatText`; `Result.Detail` comes back empty for
+  protobuf rather than echoing a value that had no effect.
+
+- **`seconds int` is now `Window time.Duration`.** No more guessing the unit.
+  `DefaultWindow` (5s) and `MaxWindow` (30s) replace the bare numbers.
+
+- **`Kind` is a named type**, so `KindHeep` is a compile error instead of
+  reaching the runtime as a silent miss. The values still match the names the
+  Go runtime registers profiles under.
+
+- **`Encoding` is a named type** (`EncodingBase64Gzip` / `EncodingText`).
+
+### Fixed
+
+- **An unrecognised `Kind`, `Format` or `Detail` is now an error** rather than
+  a silent fallback to heap. A typo that quietly returns the wrong profile
+  costs more than one that says so, and the message names the offending value.
+
+- **`FormatText` on `KindCPU` or `KindTrace` is rejected up front.** Neither
+  has a text form, so the previous behaviour would have produced a `Result`
+  whose `Format` contradicted its `Encoding`.
+
 ## v0.2.1 — 2026-08-08
 
 Repo plumbing only. No library code changed.
