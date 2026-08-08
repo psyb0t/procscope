@@ -5,6 +5,7 @@
 [![coverage](https://raw.githubusercontent.com/psyb0t/procscope/badges/coverage.svg)](https://github.com/psyb0t/procscope/actions/workflows/pipeline.yml)
 [![version](https://raw.githubusercontent.com/psyb0t/procscope/badges/version.svg)](https://github.com/psyb0t/procscope/tags)
 [![license](https://raw.githubusercontent.com/psyb0t/procscope/badges/license.svg)](LICENSE)
+[![imported by](https://raw.githubusercontent.com/psyb0t/procscope/badges/importers.svg)](https://github.com/psyb0t/procscope/blob/badges/importers.md)
 
 Go library that lets a process profile itself — what it's burning CPU on, what's holding memory, what every goroutine is doing — and returns the answer as a **value** instead of serving it on a port.
 
